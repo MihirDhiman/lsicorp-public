@@ -4,6 +4,7 @@ import PublicLayout from "./components/layout/PublicLayout";
 // Public Pages
 import Home from "./pages/Home";
 import AboutLsi from "./pages/AboutLsi";
+import Shop from "./components/shop/ShopLanding";
 
 export default function AppRouter() {
   return (
@@ -15,6 +16,8 @@ export default function AppRouter() {
         <Route element={<PublicLayout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/about-lsi" element={<AboutLsi />} />
+          <Route path="/shop" element={<Shop />} />
+
         </Route>
       </Routes>
     </BrowserRouter>
