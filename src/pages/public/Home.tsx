@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCmsPage } from "../context/CmsContext";
+import { useCmsPage } from "../../context/CmsContext";
 
 const BASE_URL = ((import.meta.env.VITE_API_URL_PROFILE_PIC as string) ?? "").replace(/\/$/, "");
   const resolveUrl = (path: string) => {
