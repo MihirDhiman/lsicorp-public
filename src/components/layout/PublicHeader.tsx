@@ -146,7 +146,7 @@ export default function PublicHeader() {
       case 'Services & Products':
         return (
           <>
-            <Link href="/service-products" onClick={closeParent} className="block px-3 sm:px-4 py-2 text-white hover:text-red-500 font-bold text-xs sm:text-base">Services & Products Overview</Link>
+            <Link href="/services-products" onClick={closeParent} className="block px-3 sm:px-4 py-2 text-white hover:text-red-500 font-bold text-xs sm:text-base">Services & Products Overview</Link>
             
             <InnerDropdownItem
               name="Services"
@@ -225,7 +225,7 @@ export default function PublicHeader() {
         </svg>
       </button>
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-75 bg-black shadow-lg py-2 z-50 border-t-4 border-[#AB2328]">
+        <div className="absolute top-full left-0 mt-2 w-80 bg-black shadow-lg py-2 z-50 border-t-4 border-[#AB2328]">
           {getDropdownContent(name, setter)}
         </div>
       )}
@@ -444,7 +444,7 @@ export default function PublicHeader() {
 
               {/* Overview */}
               <Link
-                href="/service-products"
+                href="/services-products"
                 onClick={() => {
                   setMobileServices({ open: false, servicesOpen: false, productsOpen: false })
                   setMobileOpen(false)   // ADD THIS
