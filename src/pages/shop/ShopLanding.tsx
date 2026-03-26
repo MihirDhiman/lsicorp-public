@@ -1,26 +1,29 @@
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 import ShopNav from "./Home/ShopNav";
 import ShopHero from "./Home/ShopHero";
-import ShopCategory from "./Home/ShopCategory";
+import ShopCategory from "./Home/ShopCategoriyHome";
 import ShopProductSection from "./Home/ShopProductSection";
 import ShopCart from "./Home/ShopCart";
 
-import { products } from "./Home/Data/ProductsData";
+import { products, categoryData } from "./Home/Data/ProductsData";
 import type { Product } from "./Home/Data/ProductsData";
 
 type CartItem = Product & { qty: number };
 
-export default function ShopLanding() {
-  // 📊 Categories
-  const categories = [
-    { name: "Electronics", items: "128 Items", icon: "📱" },
-    { name: "Fashion", items: "86 Items", icon: "👕" },
-    { name: "Home Decor", items: "64 Items", icon: "🏠" },
-    { name: "Beauty", items: "42 Items", icon: "💄" },
-  ];
+// 🔥 Convert slug → normal text
+const normalize = (text?: string) =>
+  text ? text.replace(/-/g, " ").toLowerCase() : "";
 
-  // 🛒 Cart State
+const slugify = (text: string) =>
+  text.toLowerCase().replace(/\s+/g, "-");
+
+export default function ShopLanding() {
+  const { category, subCategory } = useParams();
+  const navigate = useNavigate();
+
+  // 🛒 Cart
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -77,38 +80,94 @@ export default function ShopLanding() {
     setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // 💰 Totals
   const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+
+  // 🔥 FILTER PRODUCTS
+  const filteredProducts = products.filter((p) => {
+    return (
+      (!category || p.category.toLowerCase() === normalize(category)) &&
+      (!subCategory ||
+        p.subCategory?.toLowerCase() === normalize(subCategory))
+    );
+  });
+
+  const isCategoryPage = !!category || !!subCategory;
+
+  const displayProducts =
+    isCategoryPage ? filteredProducts : products;
 
   return (
     <div className="bg-white text-gray-900">
 
-      {/* ✅ NAV */}
+      {/* NAV */}
       <ShopNav
         totalItems={totalItems}
         onCartClick={() => setIsCartOpen(true)}
       />
 
-      {/* ✅ HERO */}
-      <ShopHero
-        onShopClick={() => console.log("Go to shop")}
-        onExploreClick={() => console.log("Explore")}
-      />
+      {/* 🔥 CATEGORY PAGE */}
+      {isCategoryPage ? (
+        <div className="px-8 py-10">
 
-      {/* ✅ CATEGORY */}
-     <ShopCategory
-  categories={categories}
-  products={products}
-  onAddToCart={addToCart}
-/>
+          {/* HEADING */}
+          <h2 className="text-3xl font-bold mb-6 capitalize">
+            {subCategory
+              ? normalize(subCategory)
+              : normalize(category)}
+          </h2>
 
-      {/* ✅ PRODUCTS */}
-      <ShopProductSection
-        products={products}
-        onAddToCart={addToCart}
-      />
+          {/* SUBCATEGORY FILTER */}
+          {category && (
+            <div className="flex flex-wrap gap-3 mb-8">
+              {categoryData
+                .find(
+                  (c) =>
+                    c.name.toLowerCase() === normalize(category)
+                )
+                ?.subcategories.map((sub) => (
+                  <button
+                    key={sub}
+                    onClick={() =>
+                      navigate(
+                        `/shop/${category}/${slugify(sub)}`
+                      )
+                    }
+                    className={`px-4 py-2 rounded-full border ${
+                      normalize(subCategory) === sub.toLowerCase()
+                        ? "bg-black text-white"
+                        : "hover:bg-gray-100"
+                    }`}
+                  >
+                    {sub}
+                  </button>
+                ))}
+            </div>
+          )}
 
-      {/* ✅ CART */}
+          {/* PRODUCTS */}
+          <ShopProductSection
+            products={displayProducts}
+            onAddToCart={addToCart}
+          />
+        </div>
+      ) : (
+        <>
+          {/* 🏠 HOME SHOP PAGE */}
+          <ShopHero />
+
+          <ShopCategory
+            products={products}
+            onAddToCart={addToCart}
+          />
+
+          <ShopProductSection
+            products={products}
+            onAddToCart={addToCart}
+          />
+        </>
+      )}
+
+      {/* CART */}
       <ShopCart
         cart={cart}
         isOpen={isCartOpen}
