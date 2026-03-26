@@ -44,8 +44,8 @@ export default function Careers() {
 
         <div className="container mx-auto ml-40 h-full flex items-left justify-left relative z-10">
           <div className="text-left max-w-4xl">
-            <div className="w-[50%] h-1 mb-6" style={{ backgroundColor: hero?.["top-bar-color"]  }} />
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
+            <div className="w-[55%] h-1 mb-6" style={{ backgroundColor: hero?.["top-bar-color"]  }} />
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
               {hero?.headline}
             </h1>
             <p className="text-xl md:text-2xl text-white mb-8 leading-relaxed">

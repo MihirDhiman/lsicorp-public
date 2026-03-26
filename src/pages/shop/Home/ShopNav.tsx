@@ -8,6 +8,7 @@ import {
   Home,
   ShoppingBag,
   ShoppingCart,
+  User,
 } from "lucide-react";
 
 type ShopNavProps = {
@@ -53,7 +54,7 @@ export default function ShopNav({ totalItems, onCartClick }: ShopNavProps) {
         </div>
 
         {/* Nav */}
-        <nav className="flex items-center gap-8">
+        <nav className="flex items-center ml-20 gap-8">
 
           {/* Home */}
           <button
@@ -150,19 +151,31 @@ export default function ShopNav({ totalItems, onCartClick }: ShopNavProps) {
 
         </nav>
 
-        {/* Cart */}
-        <button
-          onClick={onCartClick}
-          className="relative flex items-center gap-2 text-black px-4 py-2 rounded-xl hover:bg-gray-100 transition"
-        >
-          <ShoppingCart size={18} />
+        {/* Cart & Login */}
+        <div className="flex items-center gap-2">
+          {/* Cart */}
+          <button
+            onClick={onCartClick}
+            className="relative flex items-center gap-2 text-black px-2 py-2 rounded-xl transition"
+          >
+            <ShoppingCart size={18} />
 
-          {totalItems > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-xs text-white px-2 py-0.5 rounded-full">
-              {totalItems}
-            </span>
-          )}
-        </button>
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-xs text-white px-2 py-0.5 rounded-full">
+                {totalItems}
+              </span>
+            )}
+          </button>
+
+          {/* Login */}
+          <button
+            onClick={() => navigate("/login")}
+            className="flex items-center gap-2 text-black px-2 py-2 rounded-xl  transition"
+          >
+            <User size={18} />
+            Login
+          </button>
+        </div>
 
       </div>
     </header>

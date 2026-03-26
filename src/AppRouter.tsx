@@ -10,7 +10,6 @@ import Shop from "./pages/shop/ShopLanding";
 import Brands from "./pages/public/Brands";
 import Careers from "./pages/public/Careers";
 import Login from "./pages/shop/Login";
-import Shop from "./pages/shop/ShopLanding";
 
 export default function AppRouter() {
   return (
