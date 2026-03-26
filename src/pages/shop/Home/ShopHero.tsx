@@ -1,4 +1,3 @@
-import React from "react";
 import { products } from "./Data/ProductsData";
 import type { Product } from "./Data/ProductsData";
 import ShopProductCard from "./ShopProductCard";
