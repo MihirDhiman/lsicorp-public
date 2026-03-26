@@ -7,6 +7,7 @@ import AboutLsi from "./pages/public/AboutLsi";
 import ServicesProducts from "./pages/public/ServicesProducts";
 import VerticalMarkets from "./pages/public/VerticalMarkets";
 import Brands from "./pages/public/Brands";
+import Careers from "./pages/public/Careers";
 import Login from "./pages/shop/Login";
 import Shop from "./pages/shop/ShopLanding";
 
@@ -23,6 +24,12 @@ export default function AppRouter() {
           <Route path="/services-products" element={<ServicesProducts />} />
           <Route path="/vertical-markets" element={<VerticalMarkets />} />
           <Route path="/brands" element={<Brands />} />
+          <Route path="/careers" element={<Careers />} />
+
+          <Route path="/shop" element={<Shop />} />
+          
+          <Route path="/shop/:category" element={<Shop />} />
+          <Route path="/shop/:category/:subCategory" element={<Shop />} />
         </Route>
 
         {/* Auth Routes (without PublicLayout) */}
