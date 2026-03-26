@@ -6,7 +6,10 @@ import Home from "./pages/public/Home";
 import AboutLsi from "./pages/public/AboutLsi";
 import ServicesProducts from "./pages/public/ServicesProducts";
 import VerticalMarkets from "./pages/public/VerticalMarkets";
-import Shop from "./pages/public/shop/ShopLanding";
+import Shop from "./pages/shop/ShopLanding";
+import Brands from "./pages/public/Brands";
+import Login from "./pages/shop/Login";
+import Shop from "./pages/shop/ShopLanding";
 
 export default function AppRouter() {
   return (
@@ -25,7 +28,13 @@ export default function AppRouter() {
           
           <Route path="/shop/:category" element={<Shop />} />
           <Route path="/shop/:category/:subCategory" element={<Shop />} />
+          <Route path="/brands" element={<Brands />} />
         </Route>
+
+        {/* Auth Routes (without PublicLayout) */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/shop" element={<Shop />} />
+
       </Routes>
     </BrowserRouter>
   );
