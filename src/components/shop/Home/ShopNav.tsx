@@ -12,7 +12,9 @@ import {
   Home,
   ShoppingBag,
   Grid,
+  User,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import Logo from "../Image/logo.png";
 type ShopNavProps = {
   totalItems: number;
@@ -90,7 +92,7 @@ useEffect(() => {
 </div>
 
         {/* Nav */}
-        <nav className="flex items-center gap-8">
+        <nav className="flex items-center gap-8 ml-20">
 
           <a className="flex items-center gap-1 text-sm text-gray-600 hover:text-black">
             <Home size={16} /> Home
@@ -102,67 +104,67 @@ useEffect(() => {
 
           {/* 🔥 CATEGORY DROPDOWN */}
          <div
-  className="relative "
-  onMouseEnter={() => {
-    if (!isClicked) setActive(true);
-  }}
-  onMouseLeave={() => {
-    if (!isClicked) setActive(false);
-  }}
->
-  <button
-    onClick={(e) => {
-      e.stopPropagation(); // ✅ FIX
-      setIsClicked((prev) => !prev);
-      setActive((prev) => !prev);
-    }}
-    className="flex items-center gap-1 text-sm text-gray-600 hover:text-black"
-  >
-    <Grid size={16} /> Categories
-  </button>
-
-  {(active || isClicked) && (
-    <div
-  onClick={(e) => e.stopPropagation()}
-  className="absolute left-1/2 -translate-x-1/2 top-full mt-0 pt-2 w-[1100px] bg-white shadow-2xl rounded-2xl border p-8 z-50 animate-fadeIn"
->
-  {/* 🔺 Arrow */}
-  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-l border-t"></div>
-
-  {/* 🔥 GRID */}
-  <div className="grid grid-cols-4 gap-x-16 gap-y-10 py-4">
-
-    {categoryData.map((cat) => (
-      <div
-        key={cat.name}
-        className="min-w-[250px] space-y-3"
-      >
-        {/* 🧾 Title */}
-        <h4 className="flex items-center gap-2 font-semibold text-black text-base">
-          {cat.icon}
-          {cat.name}
-        </h4>
-
-        {/* 📦 Subcategories */}
-        <ul className="space-y-2">
-          {cat.subcategories.map((sub) => (
-            <li
-              key={sub}
-              className="text-sm text-gray-600 hover:text-black cursor-pointer flex items-center gap-2 transition"
+            className="relative "
+            onMouseEnter={() => {
+              if (!isClicked) setActive(true);
+            }}
+            onMouseLeave={() => {
+              if (!isClicked) setActive(false);
+            }}
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); // ✅ FIX
+                setIsClicked((prev) => !prev);
+                setActive((prev) => !prev);
+              }}
+              className="flex items-center gap-1 text-sm text-gray-600 hover:text-black"
             >
-              <span className="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
-              {sub}
-            </li>
-          ))}
-        </ul>
-      </div>
-    ))}
+              <Grid size={16} /> Categories
+            </button>
 
-  </div>
-</div>
-  )}
-</div>
-  
+            {(active || isClicked) && (
+              <div
+            onClick={(e) => e.stopPropagation()}
+            className="absolute left-1/2 -translate-x-1/2 top-full mt-0 pt-2 w-[1100px] bg-white shadow-2xl rounded-2xl border p-8 z-50 animate-fadeIn"
+          >
+            {/* 🔺 Arrow */}
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-l border-t"></div>
+
+            {/* 🔥 GRID */}
+            <div className="grid grid-cols-4 gap-x-16 gap-y-10 py-4 ">
+
+              {categoryData.map((cat) => (
+                <div
+                  key={cat.name}
+                  className="min-w-[250px] space-y-3"
+                >
+                  {/* 🧾 Title */}
+                  <h4 className="flex items-center gap-2 font-semibold text-black text-base">
+                    {cat.icon}
+                    {cat.name}
+                  </h4>
+
+                  {/* 📦 Subcategories */}
+                  <ul className="space-y-2">
+                    {cat.subcategories.map((sub) => (
+                      <li
+                        key={sub}
+                        className="text-sm text-gray-600 hover:text-black cursor-pointer flex items-center gap-2 transition"
+                      >
+                        <span className="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
+                        {sub}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+
+            </div>
+          </div>
+            )}
+          </div>
+            
  
 
           <a className="text-sm text-gray-600 hover:text-black">
@@ -171,21 +173,30 @@ useEffect(() => {
 
         </nav>
 
-        {/* Cart */}
-        <button
-          onClick={onCartClick}
-          className="relative flex items-center gap-2  text-black px-4 py-2 rounded-xl hover:bg-gray-800 transition"
-        >
-          <ShoppingCart size={18} />
-          
+        <div className="flex items-center ">
+          {/* Cart */}
+          <button
+            onClick={onCartClick}
+            className="relative flex items-center gap-2 text-black px-2 py-1 rounded-xl hover:bg-gray-800 transition"
+          >
+            <ShoppingCart size={18} />
+            
 
-          {totalItems > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-xs text-white px-2 py-0.5 rounded-full">
-              {totalItems}
-            </span>
-          )}
-        </button>
-
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-xs text-white px-2 py-0.5 rounded-full">
+                {totalItems}
+              </span>
+            )}
+          </button>
+          {/* Login Button */}
+          <Link 
+            to="/login"
+            className="flex items-center gap-2 text-sm text-gray-600 hover:text-black px-4 py-2 rounded-xl transition"
+          >
+            <User size={16} />
+            Login
+          </Link>
+        </div>
       </div>
     </header>
   );            
