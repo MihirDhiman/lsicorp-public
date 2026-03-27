@@ -20,6 +20,41 @@ import {
 } from "lucide-react";
 
 // ================= CATEGORY DATA =================
+
+export const brandData = [
+  {
+    name: "LSI",
+    categories: [
+      {
+        name: "Lighting Solutions",
+        subcategories: [
+          "Outdoor Lighting",
+          "Indoor Lighting",
+          "Emergency Lighting",
+          "Lighting Controls",
+          "Poles & Mounting",
+        ],
+      },
+      {
+        name: "Digital Signage",
+        subcategories: [
+          "Digital Menu Boards",
+          "Drive-Thru Displays",
+          "Video Walls",
+        ],
+      },
+      {
+        name: "Retail Fixtures",
+        subcategories: [
+          "Shelving Systems",
+          "Refrigerated Units",
+          "Custom Counters",
+        ],
+      },
+    ],
+  },
+];
+
 export const categoryData = [
   {
     name: "Lighting Solutions",
@@ -890,7 +925,7 @@ export const products: Product[] = [
     id: "lsi-041",
     name: "Wood Finish Gondola",
     description: "Premium wood texture retail shelves.",
-    price: 21000,
+    price: 21000,     
     currency: "INR",
     category: "Retail Fixtures",
     subCategory: "Wood Fixtures",
