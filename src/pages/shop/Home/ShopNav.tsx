@@ -45,29 +45,28 @@ export default function ShopNav({ totalItems, onCartClick }: ShopNavProps) {
     navigate(path);
     setIsMobileMenuOpen(false);
   };
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as Node;
+ useEffect(() => {
+  const handleClickOutside = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
 
-      // CATEGORY CLOSE
-      setIsDesktopCategoryOpen(false);
-      setIsDesktopCategoryPinned(false);
+    // ✅ IMPORTANT: don't close if clicking inside dropdown
+    if (target.closest(".category-dropdown")) return;
 
-      // BRANDS CLOSE
-      setIsDesktopBrandsOpen(false);
+    setIsDesktopCategoryOpen(false);
+    setIsDesktopCategoryPinned(false);
+    setIsDesktopBrandsOpen(false);
 
-      // PROFILE CLOSE
-      if (profileRef.current && !profileRef.current.contains(target)) {
-        setOpen(false);
-      }
-    };
+    if (profileRef.current && !profileRef.current.contains(target)) {
+      setOpen(false);
+    }
+  };
 
-    document.addEventListener("mousedown", handleClickOutside);
+  document.addEventListener("click", handleClickOutside);
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
+}, []);
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b shadow-sm">
@@ -124,7 +123,7 @@ export default function ShopNav({ totalItems, onCartClick }: ShopNavProps) {
             {(isDesktopCategoryOpen || isDesktopCategoryPinned) && (
               <div
                 onClick={(e) => e.stopPropagation()}
-                className="absolute left-1/2 top-full z-50 mt-3 w-[min(92vw,1100px)] -translate-x-1/2 rounded-2xl border bg-white p-4 shadow-2xl sm:p-6 lg:p-8 max-h-[70vh] overflow-y-auto"
+                className=" category-dropdown absolute left-1/2 top-full z-50 mt-3 w-[min(92vw,1100px)] -translate-x-1/2 rounded-2xl border bg-white p-4 shadow-2xl sm:p-6 lg:p-8 max-h-[70vh] overflow-y-auto"
               >
                 {/* Arrow */}
                 <div className="absolute left-1/2 top-0 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rotate-45 border-l border-t bg-white"></div>
@@ -136,7 +135,8 @@ export default function ShopNav({ totalItems, onCartClick }: ShopNavProps) {
                       {/* CATEGORY */}
                       <h4
                         className="flex items-center gap-2 font-semibold text-black cursor-pointer hover:text-gray-700"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           navigate(`/shop/${slugify(cat.name)}`);
                           setIsDesktopCategoryOpen(false);
                           setIsDesktopCategoryPinned(false);
