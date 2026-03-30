@@ -10,6 +10,7 @@ import Shop from "./pages/shop/ShopLanding";
 import Brands from "./pages/public/Brands";
 import Careers from "./pages/public/Careers";
 import Login from "./pages/shop/Login";
+import RegisterPage from "./pages/shop/ShopRegister";
 
 export default function AppRouter() {
   return (
@@ -39,6 +40,7 @@ export default function AppRouter() {
 
         {/* Auth Routes (without PublicLayout) */}
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/shop" element={<Shop />} />
 
       </Routes>

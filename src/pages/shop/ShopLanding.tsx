@@ -153,7 +153,7 @@ export default function ShopLanding() {
       ) : (
         <>
           {/* 🏠 HOME SHOP PAGE */}
-          <ShopHero />
+          <ShopHero onAddToCart={addToCart} />
 
           <ShopCategory
             products={products}
