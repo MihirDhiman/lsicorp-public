@@ -18,14 +18,22 @@ import {
 } from "lucide-react";
 
 type ShopNavProps = {
-  totalItems: number;
-  onCartClick: () => void;
+  totalItems?: number;
+  onCartClick?: () => void;
+};
+type Props = {
+  cart?: any[];
+  totalItems?: number;
+  addToCart?: (product: any) => void;
 };
 
 // 🔥 Convert text → URL slug
 const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, "-");
 
-export default function ShopNav({ totalItems, onCartClick }: ShopNavProps) {
+export default function ShopNav({
+  totalItems = 0,
+  onCartClick = () => {},
+}: ShopNavProps) {
   const [isDesktopCategoryOpen, setIsDesktopCategoryOpen] = useState(false);
   const [isDesktopCategoryPinned, setIsDesktopCategoryPinned] = useState(false);
   const [isMobileCategoryOpen, setIsMobileCategoryOpen] = useState(false);

@@ -12,6 +12,17 @@ import type { Product } from "./Home/Data/ProductsData";
 
 type CartItem = Product & { qty: number };
 
+type ShopProps = {
+  cart: CartItem[];
+  addToCart: (product: Product) => void;
+  totalItems: number;
+  isCartOpen: boolean;
+  setIsCartOpen: (v: boolean) => void;
+  increaseQty: (id: string) => void;
+  decreaseQty: (id: string) => void;
+  removeItem: (id: string) => void;
+};
+
 // 🔥 Convert slug → normal text
 const normalize = (text?: string) =>
   text ? text.replace(/-/g, " ").toLowerCase() : "";
@@ -19,68 +30,20 @@ const normalize = (text?: string) =>
 const slugify = (text: string) =>
   text.toLowerCase().replace(/\s+/g, "-");
 
-export default function ShopLanding() {
+export default function ShopLanding({
+  cart,
+  addToCart,
+  totalItems,
+  isCartOpen,
+  setIsCartOpen,
+  increaseQty,
+  decreaseQty,
+  removeItem,
+}: ShopProps) {
   const { category, subCategory } = useParams();
   const navigate = useNavigate();
 
-  // 🛒 Cart
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
-  // 💾 Load cart
-  useEffect(() => {
-    const stored = localStorage.getItem("cart");
-    if (stored) setCart(JSON.parse(stored));
-  }, []);
-
-  // 💾 Save cart
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
-
-  // ➕ Add to cart
-  const addToCart = (product: Product) => {
-    setCart((prev) => {
-      const exists = prev.find((item) => item.id === product.id);
-
-      if (exists) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, qty: item.qty + 1 }
-            : item
-        );
-      }
-
-      return [...prev, { ...product, qty: 1 }];
-    });
-
-    setIsCartOpen(true);
-  };
-
-  // ➕➖ Qty
-  const increaseQty = (id: string) => {
-    setCart((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, qty: item.qty + 1 } : item
-      )
-    );
-  };
-
-  const decreaseQty = (id: string) => {
-    setCart((prev) =>
-      prev
-        .map((item) =>
-          item.id === id ? { ...item, qty: item.qty - 1 } : item
-        )
-        .filter((item) => item.qty > 0)
-    );
-  };
-
-  const removeItem = (id: string) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+  
 
   // 🔥 FILTER PRODUCTS
   const filteredProducts = products.filter((p) => {

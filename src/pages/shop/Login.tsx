@@ -7,6 +7,8 @@ import {
   ArrowRight,
   ArrowLeft,
 } from "lucide-react";
+import Cookies from "js-cookie";
+import { authService } from "../../api/api";
 import Logo from "../../pages/shop/Image/logo.png";
 import { useNavigate } from "react-router-dom";
 export default function LoginPage() {
@@ -15,25 +17,50 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-const handleSubmit = (e: React.FormEvent) => {
+
+
+const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setLoading(true);
 
-  setTimeout(() => {
-    if (email === "s.admin@yopmail.com" && password === "123456") {
-      // ✅ Save login state
-      localStorage.setItem("isLoggedIn", "true");
+  try {
+    const res = await authService.login({
+      email,
+      password,
+    });
 
-      // ✅ redirect
-      navigate("/shop");
+    const { token, user } = res.data;
+
+    // ✅ Save token
+    Cookies.set("token", token, {
+      expires: 7,
+      sameSite: "strict",
+    });
+
+    // ✅ Save user (optional)
+    Cookies.set("user", JSON.stringify(user), {
+      expires: 7,
+      sameSite: "strict",
+    });
+
+    // ✅ Optional flag (for UI)
+    localStorage.setItem("isLoggedIn", "true");
+
+    // ✅ Redirect
+    navigate("/shop");
+
+  } catch (err: any) {
+    if (err.response) {
+      alert(err.response.data?.message || "Login failed");
+    } else if (err.request) {
+      alert("Server not responding");
     } else {
-      alert("Invalid credentials");
+      alert("Something went wrong");
     }
-
+  } finally {
     setLoading(false);
-  }, 800);
+  }
 };
-
   return (
     <div className="relative  bg-gray-100 overflow-hidden font-sans">
   {/* 🌈 Shared Background Glow */}
@@ -131,7 +158,7 @@ const handleSubmit = (e: React.FormEvent) => {
   onClick={() => navigate("/register")}
   className="font-bold text-gray-900 hover:underline underline-offset-4"
 >
-  Create an account
+ Register Here
 </button>
         </p>
       </div>

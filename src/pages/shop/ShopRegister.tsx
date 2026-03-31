@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import {
   User,
   Mail,
@@ -8,6 +9,10 @@ import {
   Home,
   Globe,
   ArrowLeft,
+  Lock,
+  Map,
+  Users,
+  Hash
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../pages/shop/Image/logo.png";
@@ -15,28 +20,52 @@ import Logo from "../../pages/shop/Image/logo.png";
 export default function RegisterPage() {
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    mobile: "",
-    dob: "",
-    gender: "",
-    address1: "",
-    address2: "",
-    city: "",
-    state: "",
-    pincode: "",
-    country: "India",
-  });
+ const [form, setForm] = useState({
+  firstName: "",
+  lastName: "",
+  email: "",
+  mobile: "",
+  password: "",
+});
 
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    console.log("Register Data:", form);
-  };
+  const handleSubmit = async (e: any) => {
+  e.preventDefault();
+
+  try {
+    const payload = {
+      first_name: form.firstName,
+      last_name: form.lastName,
+      email: form.email,
+      password: form.password,
+      phone: form.mobile,
+    };
+
+    console.log("Sending:", payload);
+
+   const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
+
+api.post("/auth/register", payload);
+
+    
+
+    // ✅ Success action
+    alert("Registration successful!");
+    navigate("/login");
+
+  } catch (error: any) {
+    console.error("Error:", error.response?.data || error.message);
+
+    alert(
+      error.response?.data?.message || "Registration failed"
+    );
+  }
+};
 
   return (
     <div className="relative bg-gray-100 overflow-hidden font-sans">
@@ -68,7 +97,7 @@ export default function RegisterPage() {
             {/* Header */}
             <div className="mb-8">
               <h2 className="text-3xl font-extrabold text-gray-900 md:text-4xl">
-                Create Account
+                Register
               </h2>
               <p className="mt-2 text-gray-500">
                 Fill your details to start shopping
@@ -78,98 +107,189 @@ export default function RegisterPage() {
             {/* FORM */}
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
 
-              {/* INPUT STYLE */}
-              {[
-                { name: "name", placeholder: "Full Name", icon: User, col: "col-span-2" },
-                { name: "email", placeholder: "Email", icon: Mail },
-                { name: "mobile", placeholder: "Mobile", icon: Phone },
-                { name: "dob", type: "date", icon: Calendar },
-              ].map((field: any, i) => (
-                <div key={i} className={`relative group ${field.col || ""}`}>
-                  <field.icon className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black transition" size={18} />
-                  <input
-                    type={field.type || "text"}
-                    name={field.name}
-                    placeholder={field.placeholder}
-                    onChange={handleChange}
-                    className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm outline-none focus:border-black focus:bg-white focus:ring-4 focus:ring-black/5 transition"
-                  />
-                </div>
-              ))}
+  {/* INPUT FIELDS */}
+  {[
+  { name: "firstName", placeholder: "First Name", icon: User },
+  { name: "lastName", placeholder: "Last Name", icon: User },
+  { name: "email", placeholder: "Email", icon: Mail, type: "email" },
+  { name: "mobile", placeholder: "Mobile", icon: Phone },
+].map((field, i) => (
+  <div key={i} className="relative group">
+    <field.icon
+      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black transition"
+      size={18}
+    />
 
-              {/* Gender */}
-              <select
-                name="gender"
-                onChange={handleChange}
-                className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-3 text-sm focus:border-black focus:bg-white"
-              >
-                <option>Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </select>
+  <input
+  type={field.name === "mobile" ? "tel" : field.type || "text"}
+  name={field.name}
+  placeholder={field.placeholder}
+  maxLength={field.name === "mobile" ? 10 : undefined}
+  inputMode={field.name === "mobile" ? "numeric" : undefined}
 
-              {/* Address */}
-              <div className="relative col-span-2 group">
-                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black" size={18} />
-                <input
-                  name="address1"
-                  placeholder="Address Line 1"
-                  onChange={handleChange}
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm focus:border-black focus:bg-white focus:ring-4 focus:ring-black/5"
-                />
-              </div>
+  onKeyDown={(e) => {
+    if (field.name === "mobile") {
+      // allow control keys
+      const allowedKeys = [
+        "Backspace",
+        "Delete",
+        "ArrowLeft",
+        "ArrowRight",
+        "Tab",
+      ];
 
-              <input
-                name="address2"
-                placeholder="Address Line 2"
-                onChange={handleChange}
-                className="col-span-2 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-black focus:bg-white"
-              />
+      if (
+        !/[0-9]/.test(e.key) &&
+        !allowedKeys.includes(e.key)
+      ) {
+        e.preventDefault(); // 🚫 BLOCK non-digits instantly
+      }
+    }
+  }}
 
-              {/* City */}
-              <div className="relative group">
-                <Home className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black" size={18} />
-                <input
-                  name="city"
-                  placeholder="City"
-                  onChange={handleChange}
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm focus:border-black focus:bg-white"
-                />
-              </div>
+  onPaste={(e) => {
+    if (field.name === "mobile") {
+      const paste = e.clipboardData.getData("text");
+      if (!/^\d+$/.test(paste)) {
+        e.preventDefault(); // 🚫 block paste if not numbers
+      }
+    }
+  }}
 
-              {/* State */}
-              <input
-                name="state"
-                placeholder="State"
-                onChange={handleChange}
-                className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-black focus:bg-white"
-              />
+  onChange={(e) => {
+    if (field.name === "mobile") {
+      handleChange({
+        target: {
+          name: "mobile",
+          value: e.target.value.slice(0, 10),
+        },
+      });
+    } else {
+      handleChange(e);
+    }
+  }}
 
-              {/* Pincode */}
-              <input
-                name="pincode"
-                placeholder="Pincode"
-                onChange={handleChange}
-                className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-black focus:bg-white"
-              />
+  className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm outline-none focus:border-black focus:bg-white focus:ring-4 focus:ring-black/5 transition"
+/>
+  </div>
+))}
 
-              {/* Country */}
-              <div className="relative group">
-                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black" size={18} />
-                <input
-                  name="country"
-                  defaultValue="India"
-                  className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm focus:border-black focus:bg-white"
-                />
-              </div>
+  {/* GENDER */}
+  {/* <div className="relative group">
+    <Users
+      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black"
+      size={18}
+    />
+    <select
+      name="gender"
+      onChange={handleChange}
+      className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm focus:border-black focus:bg-white outline-none"
+    >
+      <option value="">Gender</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select>
+  </div> */}
 
-              {/* BUTTON */}
-              <button className="col-span-2 mt-4 flex items-center justify-center gap-2 rounded-xl bg-black py-4 text-sm font-bold text-white shadow-xl hover:bg-gray-800 active:scale-[0.98] transition">
-                Create Account
-              </button>
+  {/* PASSWORD */}
+  <div className="relative group col-span-2">
+    <Lock
+      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black"
+      size={18}
+    />
+    <input
+      type="password"
+      name="password"
+      placeholder="Password"
+      onChange={handleChange}
+      className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm focus:border-black focus:bg-white focus:ring-4 focus:ring-black/5 outline-none"
+    />
+  </div>
 
-            </form>
+  {/* ADDRESS 1 */}
+  {/* <div className="relative col-span-2 group">
+    <MapPin
+      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black"
+      size={18}
+    />
+    <input
+      name="address1"
+      placeholder="Address Line 1"
+      onChange={handleChange}
+      className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm focus:border-black focus:bg-white focus:ring-4 focus:ring-black/5"
+    />
+  </div> */}
+
+  {/* ADDRESS 2 */}
+  {/* <input
+    name="address2"
+    placeholder="Address Line 2"
+    onChange={handleChange}
+    className="col-span-2 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-black focus:bg-white"
+  /> */}
+
+  {/* CITY */}
+  {/* <div className="relative group">
+    <Home
+      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black"
+      size={18}
+    />
+    <input
+      name="city"
+      placeholder="City"
+      onChange={handleChange}
+      className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm focus:border-black focus:bg-white"
+    />
+  </div> */}
+
+  {/* STATE */}
+  {/* <div className="relative group">
+    <Map
+      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black"
+      size={18}
+    />
+    <input
+      name="state"
+      placeholder="State"
+      onChange={handleChange}
+      className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm focus:border-black focus:bg-white"
+    />
+  </div> */}
+
+  {/* PINCODE */}
+  {/* <div className="relative group">
+    <Hash
+      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black"
+      size={18}
+    />
+    <input
+      name="pincode"
+      placeholder="Pincode"
+      onChange={handleChange}
+      className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm focus:border-black focus:bg-white"
+    />
+  </div> */}
+
+  {/* COUNTRY */}
+  {/* <div className="relative group">
+    <Globe
+      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black"
+      size={18}
+    />
+    <input
+      name="country"
+      defaultValue="India"
+      className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-12 pr-4 text-sm focus:border-black focus:bg-white"
+    />
+  </div> */}
+
+  {/* BUTTON */}
+  <button className="col-span-2 mt-4 flex items-center justify-center gap-2 rounded-xl bg-black py-4 text-sm font-bold text-white shadow-xl hover:bg-gray-800 active:scale-[0.98] transition">
+    Register
+  </button>
+
+</form>
           </div>
         </div>
 
