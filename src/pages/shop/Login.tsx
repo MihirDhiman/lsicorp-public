@@ -132,7 +132,9 @@ const handleSubmit = async (e: React.FormEvent) => {
               <input type="checkbox" className="w-4 h-4 rounded border-gray-300 accent-black" />
               <span className="group-hover:text-black transition-colors">Remember me</span>
             </label>
-            <button type="button" className="font-semibold text-gray-900 hover:underline underline-offset-4">
+            <button 
+            onClick={() => navigate("/forgot-password")}
+            type="button" className="font-semibold text-gray-900 hover:underline underline-offset-4">
               Forgot password?
             </button>
           </div>

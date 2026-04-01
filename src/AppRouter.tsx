@@ -12,9 +12,12 @@ import Careers from "./pages/public/Careers";
 import Login from "./pages/shop/Login";
 import RegisterPage from "./pages/shop/ShopRegister";
 import ShopUserProfile from "./pages/shop/Home/ShopUserProfile"
+import ShopOrders from "./pages/shop/Home/ShopOrders";
 
 import { useState, useEffect } from "react";
 import type { Product } from "./pages/shop/Home/Data/ProductsData";
+import ResetPassword from "./pages/shop/Home/ResetPassword";
+import ForgotPassword from "./pages/shop/Home/ForgotPassword";
 
 type CartItem = Product & { qty: number };
 
@@ -184,9 +187,13 @@ export default function AppRouter() {
         </Route>
 
         {/* Auth Routes (without PublicLayout) */}
+        <Route path="/orders" element={<ShopOrders />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/profile" element={<ShopUserProfile/>} />
+        \<Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password" element={<ResetPassword />} />
+
 
         <Route
           path="/shop"

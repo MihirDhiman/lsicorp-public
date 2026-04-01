@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
    BASE API INSTANCE
 ========================= */
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "",
+  baseURL: import.meta.env.VITE_API_URL || "http://192.168.0.134:3009",
   headers: {
     "Content-Type": "application/json",
   },
@@ -21,8 +21,25 @@ export const authService = {
 
   register: (data: any) =>
     api.post("/auth/register", data),
+
   getProfile: () =>
     api.get("/user/profile"),
+
+  updateProfile: (data: any) =>
+    api.put("/user/profile", data),
+
+  // 🔥 NEW APIs
+  forgotPassword: (email: string) =>
+    api.post("/auth/forgot-password", { email }),
+
+  resetPassword: (token: string, newPassword: string) =>
+  api.post("/auth/reset-password", {
+    token,
+   newPassword, // 🔥 FIX HERE
+  }),
+
+  changePassword: (currentPassword: string, newPassword: string) =>
+    api.post("/auth/change-password", { currentPassword, newPassword }),
 };
 
 /* =========================
@@ -32,27 +49,36 @@ api.interceptors.request.use(
   (config) => {
     const token = Cookies.get("token");
 
-    // ✅ Public routes (NO TOKEN NEEDED)
-    if (
-      config.url?.includes("auth/login") ||
-      config.url?.includes("auth/register") ||
-      config.url?.includes("auth/forgot-password") ||
-      config.url?.includes("auth/reset-password")
-    ) {
-      return config;
-    }
+    // ✅ Public routes (NO TOKEN)
+    const publicRoutes = [
+      "/auth/login",
+      "/auth/register",
+      "/auth/forgot-password",
+      "/auth/reset-password",
+    ];
 
-    // ✅ Attach token if exists
-    if (token) {
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    const isPublic = publicRoutes.some((route) =>
+      config.url?.includes(route)
+    );
+
+  if (!isPublic && token) {
+  config.headers?.set("Authorization", `Bearer ${token}`);
+}
 
     return config;
   },
   (error) => Promise.reject(error)
 );
+export const orderService = {
+  createOrder: (data: any) =>
+    api.post("/user/orders", data),
 
+  getOrders: (page = 1, limit = 10) =>
+    api.get(`/user/orders?page=${page}&limit=${limit}`),
+
+  getOrderById: (id: number) =>
+    api.get(`/user/orders/${id}`),
+};
 /* =========================
    RESPONSE INTERCEPTOR
 ========================= */
@@ -60,9 +86,11 @@ api.interceptors.response.use(
   (response) => {
     const url = response.config?.url || "";
 
-    // ✅ Update token after password change (if API returns new token)
+    // ✅ Update token after password change
     if (url.includes("/auth/change-password")) {
-      const newToken = response.data?.token || response.data?.data?.token;
+      const newToken =
+        response.data?.token || response.data?.data?.token;
+
       if (newToken) {
         Cookies.set("token", newToken);
       }
@@ -71,24 +99,20 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // ❌ Network error
     if (!error.response) {
-      console.error("Network error or backend unreachable");
+      console.error("Network error");
       return Promise.reject(error);
     }
 
-    // ❌ Unauthorized (token expired / invalid)
-    if (error.response?.status === 401) {
+    // 🔐 Handle Unauthorized
+    if (error.response.status === 401) {
       const url = error.config?.url || "";
 
-      const skipRedirectRoutes = ["auth/login", "auth/register"];
-      const shouldSkip = skipRedirectRoutes.some((route) =>
-        url.includes(route)
-      );
+      const skipRoutes = ["/auth/login", "/auth/register"];
+      const shouldSkip = skipRoutes.some((r) => url.includes(r));
 
       if (!shouldSkip) {
         Cookies.remove("token");
-        Cookies.remove("user");
 
         if (window.location.pathname !== "/login") {
           window.location.href = "/login";
@@ -101,52 +125,29 @@ api.interceptors.response.use(
 );
 
 /* =========================
-   PUBLIC API (NO INTERCEPTOR)
+   PUBLIC API (NO AUTH)
 ========================= */
-const apiBaseUrl = import.meta.env.VITE_API_URL || "";
-
-if (!apiBaseUrl) {
-  console.error("VITE_API_URL is not set — publicApi may fail");
-}
-
 export const publicApi = axios.create({
-  baseURL: apiBaseUrl,
+  baseURL: import.meta.env.VITE_API_URL || "http://192.168.0.134:3009",
   headers: {
     "Content-Type": "application/json",
   },
   timeout: 10000,
-  withCredentials: false,
 });
 
 /* =========================
    DEBUG (OPTIONAL)
 ========================= */
 publicApi.interceptors.request.use((config) => {
-  console.log("publicApi Request:", {
-    method: config.method,
-    url: config.url,
-    fullUrl: `${config.baseURL}${config.url}`,
-  });
+  console.log("publicApi Request:", config.url);
   return config;
 });
 
 publicApi.interceptors.response.use(
-  (response) => {
-    console.log("publicApi Response:", {
-      status: response.status,
-      url: response.config.url,
-      data: response.data,
-    });
-    return response;
-  },
-  (error) => {
-    console.error("publicApi Error:", {
-      status: error.response?.status,
-      url: error.config?.url,
-      message: error.message,
-      data: error.response?.data,
-    });
-    return Promise.reject(error);
+  (res) => res,
+  (err) => {
+    console.error("publicApi Error:", err.response?.data);
+    return Promise.reject(err);
   }
 );
 
