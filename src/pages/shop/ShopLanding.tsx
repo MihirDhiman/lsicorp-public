@@ -9,6 +9,7 @@ import ShopCart from "./Home/ShopCart";
 
 import { products, categoryData } from "./Home/Data/ProductsData";
 import type { Product } from "./Home/Data/ProductsData";
+import ShopFooter from "./Home/ShopFooter";
 
 type CartItem = Product & { qty: number };
 
@@ -41,18 +42,40 @@ export default function ShopLanding({
   removeItem,
 }: ShopProps) {
   const { category, subCategory } = useParams();
+
+// 🔥 detect category
+const isCategory = categoryData.some(
+  (c) => slugify(c.name) === category
+);
+
+// 🔥 detect brand from product data
+const isBrand = products.some(
+  (p) => p.brand && slugify(p.brand) === category
+);
+
+// 🔥 assign values
+const brand = isBrand && !isCategory ? category : "";
+const actualCategory = isCategory ? category : "";
   const navigate = useNavigate();
 
   
 
   // 🔥 FILTER PRODUCTS
   const filteredProducts = products.filter((p) => {
-    return (
-      (!category || p.category.toLowerCase() === normalize(category)) &&
-      (!subCategory ||
-        p.subCategory?.toLowerCase() === normalize(subCategory))
-    );
-  });
+  const matchBrand = brand
+    ? p.brand && slugify(p.brand) === brand
+    : true;
+
+  const matchCategory = actualCategory
+    ? p.category.toLowerCase() === normalize(actualCategory)
+    : true;
+
+  const matchSubCategory = subCategory
+    ? p.subCategory?.toLowerCase() === normalize(subCategory)
+    : true;
+
+  return matchBrand && matchCategory && matchSubCategory;
+});
 
   const isCategoryPage = !!category || !!subCategory;
 
@@ -74,18 +97,20 @@ export default function ShopLanding({
 
           {/* HEADING */}
           <h2 className="text-3xl font-bold mb-6 capitalize">
-            {subCategory
-              ? normalize(subCategory)
-              : normalize(category)}
+           {subCategory
+  ? normalize(subCategory)
+  : brand
+  ? `${normalize(brand)} products`
+  : normalize(actualCategory)}
           </h2>
 
           {/* SUBCATEGORY FILTER */}
-          {category && (
+          {actualCategory && ( 
             <div className="flex flex-wrap gap-3 mb-8">
               {categoryData
                 .find(
                   (c) =>
-                    c.name.toLowerCase() === normalize(category)
+                    c.name.toLowerCase() === normalize(actualCategory)
                 )
                 ?.subcategories.map((sub) => (
                   <button
@@ -139,7 +164,7 @@ export default function ShopLanding({
         onDecrease={decreaseQty}
         onRemove={removeItem}
       />
-
+<ShopFooter />
     </div>
   );
 }

@@ -74,10 +74,10 @@ export const orderService = {
     api.post("/user/orders", data),
 
   getOrders: (page = 1, limit = 10) =>
-    api.get(`/user/orders?page=${page}&limit=${limit}`),
+    api.get(`/order/my-orders?page=1&limit=10`),
 
   getOrderById: (id: number) =>
-    api.get(`/user/orders/${id}`),
+    api.get(`/order/my-orders/${id}`),
 };
 /* =========================
    RESPONSE INTERCEPTOR
