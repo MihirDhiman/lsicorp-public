@@ -53,6 +53,68 @@ export const brandData = [
       },
     ],
   },
+  {
+    name: "EMI Industries",
+    categories: [
+      {
+        name: "Lighting Solutions",
+        subcategories: [
+          "Outdoor Lighting",
+          "Indoor Lighting",
+          "Emergency Lighting",
+          "Lighting Controls",
+          "Poles & Mounting",
+        ],
+      },
+      {
+        name: "Digital Signage",
+        subcategories: [
+          "Digital Menu Boards",
+          "Drive-Thru Displays",
+          "Video Walls",
+        ],
+      },
+      {
+        name: "Retail Fixtures",
+        subcategories: [
+          "Shelving Systems",
+          "Refrigerated Units",
+          "Custom Counters",
+        ],
+      },
+    ],
+  },
+  {
+    name: "ADL Technology",
+    categories: [
+      {
+        name: "Lighting Solutions",
+        subcategories: [
+          "Outdoor Lighting",
+          "Indoor Lighting",
+          "Emergency Lighting",
+          "Lighting Controls",
+          "Poles & Mounting",
+        ],
+      },
+      {
+        name: "Digital Signage",
+        subcategories: [
+          "Digital Menu Boards",
+          "Drive-Thru Displays",
+          "Video Walls",
+        ],
+      },
+      {
+        name: "Retail Fixtures",
+        subcategories: [
+          "Shelving Systems",
+          "Refrigerated Units",
+          "Custom Counters",
+        ],
+      },
+    ],
+  },
 ];
 
 export const categoryData = [
@@ -249,7 +311,7 @@ export const products: Product[] = [
     currency: "INR",
     category: "Outdoor Lighting",
     subCategory: "Landscape Lighting",
-    brand: "LSI",
+    brand: "EMI Industries",
     images: [mac1],
     thumbnail: mac1,
     rating: 4.2,
@@ -453,7 +515,7 @@ export const products: Product[] = [
     currency: "INR",
     category: "Digital Signage",
     subCategory: "Video Walls",
-    brand: "LSI",
+    brand: "EMI Industries",
     images: [iphone2],
     thumbnail: iphone2,
     rating: 4.9,
@@ -677,7 +739,7 @@ export const products: Product[] = [
     currency: "INR",
     category: "Retail Fixtures",
     subCategory: "Metal Fixtures",
-    brand: "LSI",
+    brand: "ADL Technology",
     images: [shoe1],
     thumbnail: shoe1,
     rating: 4.5,
@@ -911,7 +973,7 @@ export const products: Product[] = [
     currency: "INR",
     category: "Graphics & Signage",
     subCategory: "Window Graphics",
-    brand: "LSI",
+    brand: "ADL Technology",
     images: [s24_1],
     thumbnail: s24_1,
     rating: 4.2,
@@ -1037,7 +1099,7 @@ export const products: Product[] = [
     currency: "INR",
     category: "Digital Signage",
     subCategory: "Retail Screens",
-    brand: "LSI",
+    brand: "ADL Technology",
     images: [tv1],
     thumbnail: tv1,
     rating: 4.5,
@@ -1073,7 +1135,7 @@ export const products: Product[] = [
     currency: "INR",
     category: "Indoor Lighting",
     subCategory: "Low Bay Lights",
-    brand: "LSI",
+    brand: "ADL Technology",
     images: [shoe1],
     thumbnail: shoe1,
     rating: 4.4,
